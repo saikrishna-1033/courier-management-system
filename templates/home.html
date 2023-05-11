@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% set active_page = 'home' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-3">
+      <div class="my-4">
+        <form class="filter-form" action="{{ url_for('home') }}" method="GET">
+          <div class="form-group">
+            {{ form.pod_no.label }}
+            {{ form.pod_no(class="form-control") }}
+          </div>
+          
+          {{ form.submit(class="btn btn-primary form-control") }}
+        </form>
+      </div>
+    </div>
+    <div class="col-md
+    -9">
+      <div>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Date</th>
+              <th scope="col">POD Number</th>
+              <th scope="col">Sender Name</th>
+              <th scope="col">Sender Contact </th>
+              <th scope="col">reciver Name </th>
+              <th scope="col">reciver Contact</th>
+              <th scope="col">Pincode</th>
+              <th scope="col">Location</th>
+              <th scope="col">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if items %}
+            {% for item in items %}
+            <tr>
+              <th scope="row">{{item.id}}</th>
+              <td>{{item.booking_date}}</td>
+              <td>{{item.pod_no}}</td>
+              <td>{{item.sname}}</td>
+              <td>{{item.scontact}}</td>
+              <td>{{item.rname}}</td>
+              <td>{{item.rcontact}}</td>
+              <td>{{item.pincode}}</td>
+              <td>{{item.location}}</td>
+              <td>{{item.amount}}</td> 
+            </tr>
+            {% endfor %}
+            {% else %}
+              <h1 class="offset-lg-3">No items to show.</h1>
+            {% endif %}
+          </tbody>
+        </table>
+
+     
+    </div>
+  </div>
+{% endblock %}
+{% block javascript %}
+<script src="{{ url_for('static', filename='js/subcategory.js') }}">
+</script>
+{% endblock %}
