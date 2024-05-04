@@ -1,13 +1,11 @@
-from html import unescape
 from flask import Flask, jsonify, send_from_directory, render_template, request, redirect, url_for, g, flash
 from flask_wtf import FlaskForm, RecaptchaField
 from flask_wtf.file import FileAllowed, FileRequired
-from wtforms import HiddenField, FileField, StringField, TextAreaField, SubmitField, SelectField, DecimalField,DateField
+from wtforms import HiddenField, FileField, StringField, TextAreaField, SubmitField, SelectField, DecimalField, DateField
 from wtforms.validators import InputRequired, DataRequired, Length, ValidationError
 from wtforms.widgets import Input
 from werkzeug.utils import secure_filename, escape
 from markupsafe import Markup
-import pdb
 import sqlite3
 import os
 import datetime
@@ -20,9 +18,7 @@ app.config["SECRET_KEY"] = "secretkey"
 app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["jpeg", "jpg", "png"]
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
 app.config["IMAGE_UPLOADS"] = os.path.join(basedir, "uploads")
-
 app.config["TESTING"] = True
-
 app.config["RECAPTCHA_PUBLIC_KEY"] = "6LftyNMUAAAAANHsGBeDjOxqGbIE1sdahNHU2GYv"
 app.config["RECAPTCHA_PRIVATE_KEY"] = "6LftyNMUAAAAAJ1ZGq-NHzvf_4YU8VOeaXmg3-fe"
 
@@ -125,6 +121,7 @@ class NewBookingForm(FlaskForm):
     pincode       = PriceField("PINCODE")
     location = TextAreaField("Location", validators=[InputRequired("Input is required!"), DataRequired("Data is required!"), Length(min=5, max=40, message="Input must be between 5 and 40 characters long")])
     amount       = PriceField("Amount", validators=[FileAllowed(app.config["ALLOWED_IMAGE_EXTENSIONS"], "Images only!")])
+    submit = SubmitField('Submit')
 class FilterForm(FlaskForm):
     title       = StringField("Title", validators=[Length(max=20)])
     price       = SelectField("Price", coerce=int, choices=[(0, "---"), (1, "Max to Min"), (2, "Min to Max")])
@@ -478,8 +475,7 @@ def save_image_upload(image):
 def get_db(database=None):
     db = getattr(g, "_database", None)
     
-    
-    if database is "dtdc":
+    if database == "dtdc":
         db = g._database = sqlite3.connect("db/dtdc.db")
     if db is None:
         db = g._database = sqlite3.connect("db/globomantics.db")
